@@ -38,6 +38,7 @@ CREATE TABLE patient (
   nom                   VARCHAR(50) NOT NULL,
   prenom                VARCHAR(50) NOT NULL,
   nom_mere              VARCHAR(50) NOT NULL,
+  prenom_mere              VARCHAR(50) NOT NULL,
   date_naissance        DATE NOT NULL,
   no_assurance_maladie  VARCHAR(12)
 );
@@ -88,7 +89,9 @@ CREATE SEQUENCE seq_id_employe;
 CREATE TABLE employe (
   id_employe    INTEGER
     PRIMARY KEY
-    DEFAULT nextval('seq_id_employe')
+    DEFAULT nextval('seq_id_employe'),
+  nom           VARCHAR(50),
+  prenom        VARCHAR(50)
 );
 ALTER SEQUENCE seq_id_employe
 OWNED BY employe.id_employe;
@@ -98,7 +101,12 @@ CREATE SEQUENCE seq_id_annuaire;
 CREATE TABLE annuaire (
   id_annuaire   INTEGER
     PRIMARY KEY
-    DEFAULT nextval('seq_id_annuaire')
+    DEFAULT nextval('seq_id_annuaire'),
+  id_employe   INTEGER,
+  numero       VARCHAR(14),
+  CONSTRAINT fk_annuaire_employe FOREIGN KEY (id_employe)
+  REFERENCES employe (id_employe) MATCH SIMPLE
+  ON UPDATE CASCADE ON DELETE CASCADE
 );
 ALTER SEQUENCE seq_id_annuaire
 OWNED BY annuaire.id_annuaire;
@@ -131,13 +139,14 @@ CREATE TABLE medicament (
   id_medicament       INTEGER
     PRIMARY KEY
     DEFAULT nextval('seq_id_medicament'),
+  code                VARCHAR(50),
   medicament          VARCHAR(50),
   -- TODO: Devrait etre dans une table independante pour eviter la redondance!!
   voie_administration VARCHAR(20),
 
   /* TODO: Si on pousse la logique de la quantite par prise, on devrait aussi stocker
    * l'unite par prise dans une table separe pour eviter la redondance aussi. */
-  quantite_par_prise  NUMERIC(5,2)
+  format              NUMERIC(5,2)
 );
 ALTER SEQUENCE seq_id_medicament
 OWNED BY medicament.id_medicament;

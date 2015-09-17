@@ -13,6 +13,51 @@
 ** Date: 15-09-2015
 ******************************************************************************/
 
+INSERT INTO patient (nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie) VALUES
+  ('Willmon', 'Michael', 'Medina', 'Rosemary', '10-10-1973', 'wilm73101010'),
+  ('Lowrey', 'Kelly', 'Shatley', 'Andrea', '08-25-1976', 'lowk76582515'),
+  ('Anderson', 'Marta', 'Lemire', 'Kathy', '08-28-1946', 'andm46582812'),
+  ('Burkley', 'Vincent', 'Mercier', 'Lena', '10-16-1976', 'bukv76101609'),
+  ('Harold', 'Morris', 'Howard', 'Martha', '12-06-1971', 'harm71120611'),
+  ('OTommys', 'Tanya', 'Miles', 'Lillie', '11-05-1941', 'otan41610501'),
+  ('Hernandez', 'Megan', 'Gonzalez', 'Valerie', '03-30-1992', 'herm92533014'),
+  ('Jordan', 'Nora', 'Kinder', 'Marsha', '03-04-1950', 'jorn50530117'),
+  ('Briggs', 'Miriam', 'Longoria', 'Jenny', '05-01-1995', 'brim95510518'),
+  ('Rodriguez', 'Paul', 'Maddox', 'Shayna', '09-16-1992', 'rodp92091616');
+
+INSERT INTO employe (nom, prenom) VALUES
+  ('Corbeil', 'Charlotte'),
+  ('Fabien', 'Therriault'),
+  ('Christian', 'Houde'),
+  ('Estelle', 'Arnoux'),
+  ('Patrice', 'Descoteaux'),
+  ('Oliver', 'Lessard'),
+  ('Robert', 'Paquet'),
+  ('Eloise', 'Bonneville'),
+  ('Patrick', 'Deslauriers'),
+  ('Didier', 'Huard');
+
+INSERT INTO annuaire (id_employe, numero) VALUES
+  (1, '1 819-238-0932'),
+  (2, '1 514-777-2084'),
+  (3, '1 514-636-1650'),
+  (4, '1 819-794-0225'),
+  (5, '1 418-941-7155'),
+  (6, '1 819-587-8905'),
+  (7, '1 514-996-7833'),
+  (8, '1 819-824-4847'),
+  (9, '1 819-949-1257'),
+  (10, '1 819-540-0414');
+
+INSERT INTO qualification (qualification) VALUES
+  ('Auxiliere'),
+  ('Infirmiere'),
+  ('Technicien'),
+  ('Médecin'),
+  ('Médecin généraliste'),
+  ('Infirmiere chef'),
+  ('Prépose');
+
 INSERT INTO specialite (specialite) VALUES
   ('Anesthésiologie'),
   ('Biochimie médicale'),
@@ -41,14 +86,19 @@ INSERT INTO specialite (specialite) VALUES
   ('Rhumatologie'),
   ('Urologie');
 
-INSERT INTO qualification (qualification) VALUES
-  ('Auxiliere'),
-  ('Infirmiere'),
-  ('Technicien'),
-  ('Médecin'),
-  ('Médecin généraliste'),
-  ('Infirmiere chef'),
-  ('Prépose');
+INSERT INTO medicament (code, medicament, format) VALUES
+  ('02022826', 'LAMIVUDINE', '60'),
+  ('02216965', 'RALTÉGRAVIR', '100'),
+  ('01902652', 'SAQUINAVIR', '120'),
+  ('02286556', 'ACYCLOVIR', '30'),
+  ('02305682', 'FAMCICLOVIR', '250'),
+  ('01997769', 'IODOQUINOL', '90'),
+  ('02217422', 'ATOVAQUONE', '1'),
+  ('02244366', 'MÉFLOQUINE', '30'),
+  ('02228955', 'BUSERELINE', '2.5'),
+  ('02238560', 'FLUTAMIDE', '1'),
+  ('02182963', 'MÉTHOTREXATE', '50'),
+  ('00282081', 'THIOGUANINE', '200');
 
 INSERT INTO periode (heure) VALUES
   ('00:00:00'),
