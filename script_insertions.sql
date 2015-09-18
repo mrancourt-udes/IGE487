@@ -87,18 +87,18 @@ INSERT INTO specialite (specialite) VALUES
   ('Urologie');
 
 INSERT INTO medicament (code, medicament, format) VALUES
-  ('02022826', 'LAMIVUDINE', '60'),
-  ('02216965', 'RALTÉGRAVIR', '100'),
-  ('01902652', 'SAQUINAVIR', '120'),
-  ('02286556', 'ACYCLOVIR', '30'),
-  ('02305682', 'FAMCICLOVIR', '250'),
-  ('01997769', 'IODOQUINOL', '90'),
-  ('02217422', 'ATOVAQUONE', '1'),
-  ('02244366', 'MÉFLOQUINE', '30'),
-  ('02228955', 'BUSERELINE', '2.5'),
-  ('02238560', 'FLUTAMIDE', '1'),
-  ('02182963', 'MÉTHOTREXATE', '50'),
-  ('00282081', 'THIOGUANINE', '200');
+  ('02022826'),
+  ('02216965'),
+  ('01902652'),
+  ('02286556'),
+  ('02305682'),
+  ('01997769'),
+  ('02217422'),
+  ('02244366'),
+  ('02228955'),
+  ('02238560'),
+  ('02182963'),
+  ('00282081');
 
 INSERT INTO periode (heure) VALUES
   ('00:00:00'),
