@@ -49,7 +49,7 @@ CREATE TABLE patient (
   date_naissance        DATE
     CHECK (date_naissance < now()::date)
                                     NOT NULL,
-  no_assurance_maladie  VARCHAR(12) NOT NULL
+  no_assurance_maladie  VARCHAR(12) UNIQUE NOT NULL
 );
 ALTER SEQUENCE seq_id_patient
 OWNED BY patient.id_patient;
@@ -182,10 +182,13 @@ CREATE TABLE prescription (
   id_prescription INTEGER
     PRIMARY KEY
     DEFAULT nextval('seq_id_prescription'),
-  validee         NUMERIC(1) NOT NULL,
-  date            DATE NOT NULL,
-  dose            VARCHAR(50) NOT NULL,
-  conseils        TEXT NOT NULL
+  validee                 NUMERIC(1) NOT NULL,
+  date                    DATE NOT NULL,
+  dose                    VARCHAR(50) NOT NULL,
+  id_voie_administration  INTEGER NOT NULL,
+  conseils                TEXT NOT NULL,
+  CONSTRAINT fk_rescription_voie_administration FOREIGN KEY (id_voie_administration)
+  REFERENCES voie_administration (id_voie_administration)
 );
 ALTER SEQUENCE seq_id_prescription
 OWNED BY prescription.id_prescription;
@@ -232,8 +235,8 @@ ALTER SEQUENCE seq_id_affectation
 OWNED BY affectation.id_affectation;
 
 CREATE TABLE patient_lit (
-  id_patient    INTEGER NOT NULL,
-  id_lit        INTEGER NOT NULL,
+  id_patient    INTEGER UNIQUE NOT NULL,
+  id_lit        INTEGER UNIQUE NOT NULL,
   CONSTRAINT fk_patient_lit1 FOREIGN KEY (id_patient)
   REFERENCES patient (id_patient),
   CONSTRAINT fk_patient_lit2 FOREIGN KEY (id_lit)
@@ -242,7 +245,7 @@ CREATE TABLE patient_lit (
 
 CREATE TABLE chambre_lit (
   id_chambre    INTEGER NOT NULL,
-  id_lit        INTEGER NOT NULL,
+  id_lit        INTEGER UNIQUE NOT NULL,
   CONSTRAINT fk_chambre_lit1 FOREIGN KEY (id_chambre)
   REFERENCES chambre (id_chambre),
   CONSTRAINT fk_chambre_lit2 FOREIGN KEY (id_lit)
@@ -268,16 +271,16 @@ CREATE TABLE equipe_unite_soin (
 );
 
 CREATE TABLE employe_equipe (
-  id_employe    INTEGER NOT NULL,
   id_equipe     INTEGER NOT NULL,
-  CONSTRAINT fk_employe_equipe1 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe),
+  id_employe    INTEGER NOT NULL,
   CONSTRAINT fk_employe_equipe2 FOREIGN KEY (id_equipe)
-  REFERENCES equipe (id_equipe)
+  REFERENCES equipe (id_equipe),
+  CONSTRAINT fk_employe_equipe1 FOREIGN KEY (id_employe)
+  REFERENCES employe (id_employe)
 );
 
 CREATE TABLE employe_qualification (
-  id_employe    INTEGER NOT NULL,
+  id_employe          INTEGER NOT NULL,
   id_qualification    INTEGER NOT NULL,
   CONSTRAINT fk_employe_qualification1 FOREIGN KEY (id_employe)
   REFERENCES employe (id_employe),
@@ -286,8 +289,8 @@ CREATE TABLE employe_qualification (
 );
 
 CREATE TABLE employe_specialite (
-  id_employe    INTEGER NOT NULL,
-  id_specialite    INTEGER NOT NULL,
+  id_employe        INTEGER NOT NULL,
+  id_specialite     INTEGER NOT NULL,
   CONSTRAINT fk_employe_specialite1 FOREIGN KEY (id_employe)
   REFERENCES employe (id_employe),
   CONSTRAINT fk_employe_specialite2 FOREIGN KEY (id_specialite)
@@ -385,7 +388,7 @@ CREATE TABLE prescription_periode (
 );
 
 CREATE TABLE periode_quart_travail (
-  id_periode    INTEGER NOT NULL,
+  id_periode          INTEGER NOT NULL,
   id_quart_travail    INTEGER NOT NULL,
   CONSTRAINT fk_periode_quart_travail1 FOREIGN KEY (id_periode)
   REFERENCES periode (id_periode),
