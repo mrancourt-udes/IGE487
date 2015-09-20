@@ -203,7 +203,7 @@ INSERT INTO employe_qualification (id_employe, id_qualification) VALUES
   (1, 2),
   (2, 3),
   (3, 3),
-  (5, 5),
+  (4, 5),
   (5, 6),
   (6, 1),
   (8, 6),
@@ -260,21 +260,21 @@ INSERT INTO equipe (id_equipe, id_infirmiere_chef) VALUES
 *     - De preposes
 */
 INSERT INTO employe_equipe (id_equipe, id_employe) VALUES
--- Equipe 1
-  -- Infirmiere
+  -- Equipe 1
+    -- Infirmiere
   (1, 3),
   (1, 2),
   (1, 16),
   (1, 23),
   -- Auxiliaires
-  (1, 5),
+  (1, 4),
   (1, 24),
   -- Preposes
   (1, 5),
   (1, 8),
 
--- Equipe 2
-  -- Infirmieres
+  -- Equipe 2
+    -- Infirmieres
   (2, 3),
   (2, 26),
   (2, 28),
