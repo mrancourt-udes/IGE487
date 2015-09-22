@@ -22,7 +22,7 @@ employe_specialite, qualification_prealable, medicament_specialite,
 medicament_qualification, prescription_medicament, format_medicament,
 voie_administration_medicament, ordonnance_prescription, ordonnance_medecin,
 ordonnance_patient, prescription_periode, periode_quart_travail,
-affectation_quart_travail, employe_quart_travail
+affectation_quart_travail, employe_quart_travail, affectation_employe
 CASCADE;
 
 DROP SEQUENCE IF EXISTS
@@ -36,22 +36,6 @@ CASCADE;
 -------------------------------------------------------------------------------
 -- Debut de la creation des tables
 -------------------------------------------------------------------------------
-
-CREATE SEQUENCE seq_id_patient;
-CREATE TABLE patient (
-  id_patient            INTEGER
-    PRIMARY KEY
-    DEFAULT nextval('seq_id_patient'),
-  nom             VARCHAR(50) NOT NULL,
-  prenom          VARCHAR(50) NOT NULL,
-  nom_mere        VARCHAR(50) NOT NULL,
-  prenom_mere     VARCHAR(50) NOT NULL,
-  date_naissance  DATE NOT NULL
-    CHECK (date_naissance < now()::date),
-  no_assurance_maladie  VARCHAR(12) UNIQUE NOT NULL
-);
-ALTER SEQUENCE seq_id_patient
-OWNED BY patient.id_patient;
 
 CREATE SEQUENCE seq_id_lit;
 CREATE TABLE lit (
@@ -92,6 +76,25 @@ CREATE TABLE employe (
 );
 ALTER SEQUENCE seq_id_employe
 OWNED BY employe.id_employe;
+
+CREATE SEQUENCE seq_id_patient;
+CREATE TABLE patient (
+  id_patient            INTEGER
+    PRIMARY KEY
+    DEFAULT nextval('seq_id_patient'),
+  nom             VARCHAR(50) NOT NULL,
+  prenom          VARCHAR(50) NOT NULL,
+  nom_mere        VARCHAR(50) NOT NULL,
+  prenom_mere     VARCHAR(50) NOT NULL,
+  date_naissance  DATE NOT NULL
+    CHECK (date_naissance < now()::date),
+  no_assurance_maladie  VARCHAR(12) UNIQUE NOT NULL,
+  id_employe	  INTEGER NOT NULL,
+  CONSTRAINT fk_patient_employe FOREIGN KEY (id_employe)
+  REFERENCES employe (id_employe)
+);
+ALTER SEQUENCE seq_id_patient
+OWNED BY patient.id_patient;
 
 CREATE SEQUENCE seq_id_equipe;
 CREATE TABLE equipe (
@@ -228,7 +231,8 @@ CREATE SEQUENCE seq_id_affectation;
 CREATE TABLE affectation (
   id_affectation    INTEGER
     PRIMARY KEY
-    DEFAULT nextval('seq_id_affectation')
+    DEFAULT nextval('seq_id_affectation'),
+  urgence           SMALLINT CHECK (urgence >= 0 AND urgence <= 1)
 );
 ALTER SEQUENCE seq_id_affectation
 OWNED BY affectation.id_affectation;
@@ -431,4 +435,14 @@ CREATE TABLE employe_quart_travail (
   REFERENCES employe (id_employe),
   CONSTRAINT fk_employe_quart_travail2 FOREIGN KEY (id_quart_travail)
   REFERENCES quart_travail (id_quart_travail)
+);
+
+CREATE TABLE affectation_employe (
+  id_affectation    INTEGER NOT NULL,
+  id_employe INTEGER NOT NULL,
+  PRIMARY KEY (id_affectation, id_employe),
+  CONSTRAINT fk_affectation_employe1 FOREIGN KEY (id_affectation)
+  REFERENCES affectation (id_affectation),
+  CONSTRAINT fk_affectation_employe2 FOREIGN KEY (id_employe)
+  REFERENCES employe (id_employe)
 );
