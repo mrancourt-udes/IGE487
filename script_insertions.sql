@@ -58,17 +58,17 @@ INSERT INTO employe (nom, prenom) VALUES
   ('Bélanger', 'Mike'),
   ('Lafortune', 'Gabriel');
 
-INSERT INTO patient (nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie, id_employe) VALUES
-  ('Willmon', 'Michael', 'Medina', 'Rosemary', '10-10-1973', 'wilm73101010',11),
-  ('Lowrey', 'Kelly', 'Shatley', 'Andrea', '08-25-1976', 'lowk76582515',12),
-  ('Anderson', 'Marta', 'Lemire', 'Kathy', '08-28-1946', 'andm46582812',13),
-  ('Burkley', 'Vincent', 'Mercier', 'Lena', '10-16-1976', 'bukv76101609',14),
-  ('Harold', 'Morris', 'Howard', 'Martha', '12-06-1971', 'harm71120611',15),
-  ('OTommys', 'Tanya', 'Miles', 'Lillie', '11-05-1941', 'otan41610501',16),
-  ('Hernandez', 'Megan', 'Gonzalez', 'Valerie', '03-30-1992', 'herm92533014',17),
-  ('Jordan', 'Nora', 'Kinder', 'Marsha', '03-04-1950', 'jorn50530117',18),
-  ('Briggs', 'Miriam', 'Longoria', 'Jenny', '05-01-1995', 'brim95510518',19),
-  ('Rodriguez', 'Paul', 'Maddox', 'Shayna', '09-16-1992', 'rodp92091616',20);
+INSERT INTO patient (nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie) VALUES
+  ('Willmon', 'Michael', 'Medina', 'Rosemary', '10-10-1973', 'wilm73101010'),
+  ('Lowrey', 'Kelly', 'Shatley', 'Andrea', '08-25-1976', 'lowk76582515'),
+  ('Anderson', 'Marta', 'Lemire', 'Kathy', '08-28-1946', 'andm46582812'),
+  ('Burkley', 'Vincent', 'Mercier', 'Lena', '10-16-1976', 'bukv76101609'),
+  ('Harold', 'Morris', 'Howard', 'Martha', '12-06-1971', 'harm71120611'),
+  ('OTommys', 'Tanya', 'Miles', 'Lillie', '11-05-1941', 'otan41610501'),
+  ('Hernandez', 'Megan', 'Gonzalez', 'Valerie', '03-30-1992', 'herm92533014'),
+  ('Jordan', 'Nora', 'Kinder', 'Marsha', '03-04-1950', 'jorn50530117'),
+  ('Briggs', 'Miriam', 'Longoria', 'Jenny', '05-01-1995', 'brim95510518'),
+  ('Rodriguez', 'Paul', 'Maddox', 'Shayna', '09-16-1992', 'rodp92091616');
 
 INSERT INTO annuaire (id_employe, numero_telephone) VALUES
   (1, '1 819-238-0932'),
@@ -111,17 +111,17 @@ INSERT INTO qualification (qualification) VALUES
   ('Prépose');
 
 INSERT INTO qualification_prealable (id_qualification, id_prealable) VALUES
-/* Une infirmiere peut administrer un medicament exigeant la qualification
- d'auxiliaire */
+  /* Une infirmiere peut administrer un medicament exigeant la qualification
+   d'auxiliaire */
   (3, 5),
-/* l'infirmiere chef aussi */
+  /* l'infirmiere chef aussi */
   (4, 5),
-/* un medecin celle d'infirmiere */
+  /* un medecin celle d'infirmiere */
   (1, 3),
-/* un medecin celle d'une prepose */
+  /* un medecin celle d'une prepose */
   (1, 6),
-/* un medecin celle d'un technicien dans la mesure ou le medecin possede
-   egalement la spécialite requise. */
+  /* un medecin celle d'un technicien dans la mesure ou le medecin possede
+     egalement la spécialite requise. */
   (3, 2);
 
 /*
@@ -227,11 +227,7 @@ INSERT INTO employe_qualification (id_employe, id_qualification) VALUES
   (27, 5),
   (28, 3);
 
-/* TODO :
-*   S'assurer de l'integrite des informations entres dans cette table.
-*   Etant donne que SEUL les techniciens et les medecins possedent une
-*   ou plusieurs specialites.
-*
+/*
 *  NOTE :
 *   La medecine generale est consideree comme une specialite, mais elle
 *   n'a pas de correspondance pour les techniciens
@@ -257,7 +253,6 @@ INSERT INTO employe_specialite (id_employe, id_specialite) VALUES
   (19,1),
   (20,1);
 
--- TODO : revalider cette entitee 
 INSERT INTO equipe (id_equipe, id_infirmiere_chef) VALUES
   (1, 13),
   (2, 18);
@@ -270,28 +265,28 @@ INSERT INTO equipe (id_equipe, id_infirmiere_chef) VALUES
 *     - De preposes
 */
 INSERT INTO employe_equipe (id_equipe, id_employe) VALUES
--- Equipe 1
-  -- Infirmiere
+  -- Equipe 1
+    -- Infirmiere
   (1, 3),
   (1, 2),
   (1, 16),
   (1, 23),
--- Auxiliaires
+  -- Auxiliaires
   (1, 4),
   (1, 24),
--- Preposes
+  -- Preposes
   (1, 5),
   (1, 8),
 
--- Equipe 2
-  -- Infirmieres
+  -- Equipe 2
+    -- Infirmieres
   (2, 3),
   (2, 26),
   (2, 28),
--- Auxiliaires
+  -- Auxiliaires
   (2, 11),
   (2, 27),
--- Preposes
+  -- Preposes
   (2, 14),
   (2, 20);
 
@@ -389,6 +384,31 @@ INSERT INTO patient_lit (id_patient, id_lit) VALUES
   (7,2),
   (8,3),
   (10,9);
+
+
+INSERT INTO sejour(id_patient, date_debut, date_fin, id_unite_soin, id_chambre, id_lit) VALUES
+  (1, '11-02-2015', '11-12-2015', 1, 1, 3),
+  (2, '11-02-2015', '11-08-2015', 2, 2, 1),
+  (3, '11-03-2015', '11-06-2015', 1, 4, 5),
+  (4, '11-05-2015', '11-09-2015', 3, 3, 6),
+  (5, '11-05-2015', '11-06-2015', 1, 2, 1),
+  (6, '11-07-2015', '11-15-2015', 4, 5, 3),
+  (7, '11-07-2015', '11-22-2015', 4, 7, 1),
+  (8, '11-07-2015', '11-13-2015', 2, 8, 8),
+  (9, '11-08-2015', '11-16-2015', 3, 1, 10),
+  (10, '11-12-2015', '11-16-2015', 1, 10, 9);
+
+INSERT INTO medecin_traitant(id_employe, id_patient, date_debut, date_fin) VALUES
+  (1, 1, '11-02-2015', '11-12-2015'),
+  (5, 2, '11-02-2015', '11-08-2015'),
+  (8, 3, '11-03-2015', '11-06-2015'),
+  (5, 4, '11-05-2015', '11-09-2015'),
+  (3, 5, '11-05-2015', '11-06-2015'),
+  (10, 6, '11-07-2015', '11-15-2015'),
+  (6, 7, '11-07-2015', '11-22-2015'),
+  (8, 8, '11-07-2015', '11-10-2015'),
+  (3, 9, '11-08-2015', '11-16-2015'),
+  (8, 10, '11-12-2015', '11-16-2015');
 
 INSERT INTO format (format) VALUES
   (1),
@@ -507,10 +527,6 @@ INSERT INTO ordonnance_patient (id_ordonnance, id_patient) VALUES
   (4, 6),
   (5, 10);
 
-/* TODO :
-*   Revalider cette entitee,
-*
-*/
 INSERT INTO prescription (validee, date, dose, id_voie_administration, conseils)  VALUES
   (1, '09-10-2015', 400, 1,
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida
@@ -575,11 +591,6 @@ INSERT INTO periode_quart_travail (id_periode, id_quart_travail) VALUES
   (23, 3),
   (24, 3);
 
-/* TODO :
-*   La validite des informations de cette table est a verifier.
-*   Entre particulier, on doit s'assurer qu'un membre du personnel de
-*   chaque qualification est affecter a chaque quart de travail!
-*/
 INSERT INTO employe_quart_travail (id_employe, id_quart_travail) VALUES
   (1, 1),
   (2, 2),
