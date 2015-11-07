@@ -25,7 +25,7 @@ employe_specialite, qualification_prealable, medicament_specialite,
 medicament_qualification, prescription_medicament, format_medicament,
 voie_administration_medicament, ordonnance_prescription, ordonnance_medecin,
 ordonnance_patient, prescription_periode, periode_quart_travail,
-affectation_quart_travail, employe_quart_travail
+affectation_quart_travail, employe_quart_travail, error
 RESTART IDENTITY CASCADE;
 
 INSERT INTO employe (nom, prenom) VALUES

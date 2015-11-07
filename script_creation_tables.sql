@@ -14,15 +14,16 @@
 -- Nettoyage complet de la base de donnees
 -------------------------------------------------------------------------------
 DROP TABLE IF EXISTS
-patient, lit, chambre, unite_soin, sejour, equipe, employe, annuaire, qualification,
-specialite, medicament, format, voie_administration, prescription, ordonnance,
-periode, quart_travail, affectation, patient_lit, chambre_lit,
-unite_soin_chambre, equipe_unite_soin, employe_equipe, employe_qualification,
-employe_specialite, medecin_traitant, qualification_prealable, medicament_specialite,
-medicament_qualification, prescription_medicament, format_medicament,
-voie_administration_medicament, ordonnance_prescription, ordonnance_medecin,
-ordonnance_patient, prescription_periode, periode_quart_travail,
-affectation_quart_travail, employe_quart_travail, affectation_employe
+patient, lit, chambre, unite_soin, sejour, equipe, employe, annuaire,
+qualification, specialite, medicament, format, voie_administration,
+prescription, ordonnance, periode, quart_travail, affectation, patient_lit,
+chambre_lit, unite_soin_chambre, equipe_unite_soin, employe_equipe,
+employe_qualification, employe_specialite, medecin_traitant,
+qualification_prealable, medicament_specialite, medicament_qualification,
+prescription_medicament, format_medicament, voie_administration_medicament,
+ordonnance_prescription, ordonnance_medecin, ordonnance_patient,
+prescription_periode, periode_quart_travail, affectation_quart_travail,
+employe_quart_travail, affectation_employe, error
 CASCADE;
 
 DROP SEQUENCE IF EXISTS
@@ -30,7 +31,7 @@ seq_id_patient, seq_id_lit, seq_id_chambre, seq_id_unite_soin, seq_id_equipe,
 seq_id_employe, seq_id_annuaire, seq_id_qualification, seq_id_specialite,
 seq_code_medicament, seq_id_format, seq_id_voie_administration,
 seq_id_prescription, seq_id_ordonnance, seq_id_periode, seq_id_quart_travail,
-seq_id_affectation
+seq_id_affectation, seq_id_error
 CASCADE;
 
 -------------------------------------------------------------------------------
@@ -495,5 +496,5 @@ ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe1 FOREIGN K
   REFERENCES affectation (id_affectation);
 ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe2 FOREIGN KEY (id_employe)
   REFERENCES employe (id_employe);
-  
+
 ALTER TABLE error ADD PRIMARY KEY (code_error);
