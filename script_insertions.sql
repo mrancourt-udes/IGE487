@@ -644,3 +644,11 @@ INSERT INTO affectation_quart_travail (id_affectation, id_quart_travail) VALUES
   (2,3),
   (3,1),
   (4,2);
+
+INSERT INTO error (code_error,libelle_error) VALUES
+  (100,'Seul un medeci peut établir une ordonnance'),
+  (101,'Seul un medecin généraliste peut être affecté à un patient'),
+  (102,'Seuls les medecins et les techniciens peuvent avoir de specialité'),
+  (103,'Un technicien ne peut pas être medecin généraliste'),
+  (104,'Le chef d equipe doit être Infirmière Chef'),
+  (105,'Cette chambre a atteint son nombre maximum de lits');

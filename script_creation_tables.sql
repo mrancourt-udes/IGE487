@@ -256,7 +256,7 @@ CREATE TABLE affectation_employe (
 CREATE SEQUENCE seq_id_error;
 CREATE TABLE error (
   code_error        INTEGER DEFAULT nextval('seq_id_error'),
-  libelle_error     VARCHAR(50) NOT NULL
+  libelle_error     VARCHAR(150) NOT NULL
 );
 
 ALTER TABLE lit ADD PRIMARY KEY (id_lit);
@@ -463,4 +463,5 @@ ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe1 FOREIGN K
   REFERENCES affectation (id_affectation);
 ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe2 FOREIGN KEY (id_employe)
   REFERENCES employe (id_employe);
+  
 ALTER TABLE error ADD PRIMARY KEY (code_error);

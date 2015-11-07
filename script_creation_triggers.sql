@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION afficher_error(code INTEGER) RETURNS VARCHAR AS $$
 		vlibelle_error  VARCHAR(100);
     BEGIN
 	  SELECT libelle_error INTO vlibelle_error FROM error WHERE code_error = code; 
-	  vmessage_error := code ||' '|| vlibelle_error;
+	  vmessage_error := code ||':'|| vlibelle_error;
 	  RETURN vmessage_error;
     END;
     $$ LANGUAGE plpgsql;
@@ -30,10 +30,11 @@ AS $ordonnance_check_medecin$
 		vmessage_d_erreur	VARCHAR(150);
 		      
     BEGIN
-    	vmessage_d_erreur := SELECT afficher_error(100);
+
+    	SELECT afficher_error(100) into vmessage_d_erreur;
 		SELECT id_qualification INTO vidQualifification FROM employe_qualification WHERE id_employe = NEW.id_medecin;
 		IF vidQualifification <> 1 THEN
-		   RAISE EXCEPTION vmessage_d_erreur ;
+		   RAISE EXCEPTION '%', vmessage_d_erreur;
 		END IF;
 		RETURN NEW;
     END;
@@ -44,7 +45,7 @@ CREATE TRIGGER ordonnance_check_medecin BEFORE INSERT ON ordonnance_medecin
 /*
 						RESULTAT D'EXECUTION DU TRIGGER
 insert into ordonnance_medecin(id_ordonnance, id_medecin) values(5,19)
-Resultat: ERREUR:  Seul un medecin peut etablir une ordonnance 
+Resultat: ERREUR:  100: Seul un medecin peut etablir une ordonnance 
 
 insert into ordonnance_medecin(id_ordonnance, id_medecin) values(5,18)
 Resultat: La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 67 ms
@@ -59,10 +60,10 @@ AS $medecin_check$
         vmessage_d_erreur	VARCHAR(150);
           
     BEGIN
-    	vmessage_d_erreur := SELECT afficher_error(101);
+    	SELECT afficher_error(101) into vmessage_d_erreur;
 	    SELECT id_specialite INTO vidSpecialite FROM employe_specialite WHERE id_employe = NEW.id_employe;
 		IF vidSpecialite <> 1 THEN
-		   RAISE EXCEPTION vmessage_d_erreur;
+		   RAISE EXCEPTION '%', vmessage_d_erreur;
 		END IF;
 	    RETURN NEW;
     END;
@@ -74,7 +75,7 @@ CREATE TRIGGER medecin_check BEFORE INSERT ON patient
 							RESULTAT D'EXECUTION DU TRIGGER
 insert into patient(nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie, id_employe) values
 ('laporte', 'christian', 'grevet', 'jessica','21-10-1992','lowk7658269',5)
-Resultat : ERREUR:  Le medecin doit etre generaliste 
+Resultat : ERREUR:  101: Seul un medecin généraliste peut être affecté à un patient 
 
 insert into patient(nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie, id_employe) values
 ('laporte', 'christian', 'grevet', 'jessica','21-10-1992','lowk7658269',3)
@@ -88,10 +89,10 @@ Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requêt
 		vidQualification	INTEGER;
 		 vmessage_d_erreur	VARCHAR(150);
     BEGIN
-    	vmessage_d_erreur:= SELECT afficher_error(102);
+    	SELECT afficher_error(102) into vmessage_d_erreur;
 		SELECT id_qualification INTO vidQualification FROM employe_qualification WHERE id_employe = NEW.id_employe;
 		IF (vidQualification <> 1 OR vidQualification <> 2) THEN
-			RAISE EXCEPTION vmessage_d_erreur ;
+			RAISE EXCEPTION '%', vmessage_d_erreur;
 		END IF;
 		RETURN NEW;
 	
@@ -103,10 +104,7 @@ CREATE TRIGGER check_employe_specialite BEFORE INSERT ON employe_specialite
 /*
 							RESULTAT D'EXECUTION DU TRIGGER
 insert into employe_specialite(id_employe, id_specialite) values(20,6)
-Resulat : ERREUR:   Cet employe ne peut pas avoir de specialite
-
-insert into employe_specialite(id_employe, id_specialite) values(21,6) --cas d'un technicien
-Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 12 ms.
+Resulat : ERREUR:   102: Seuls les medecins et les techniciens peuvent avoir de specialité
 
 insert into employe_specialite(id_employe, id_specialite) values(18,6)-- cas d'un medecin
 Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 13 ms.
@@ -118,13 +116,17 @@ AS $check_employe_qualification$
 		vidQualification	INTEGER;
 		vidSpecialite	    INTEGER;
 		 vmessage_d_erreur	VARCHAR(150);
+		 vq INTEGER;
+		 vs INTEGER;
     BEGIN
-    	vmessage_d_erreur := SELECT afficher_error(103);
+        vq :=2;
+        vs :=1;
+    	SELECT afficher_error(103) into vmessage_d_erreur;
 		SELECT id_qualification into vidQualification from employe_qualification where id_employe = NEW.id_employe;
 		SELECT id_specialite into vidSpecialite from employe_specialite where id_employe = NEW.id_employe;
-		IF vidQualification = 2 THEN
-			IF vidSpecialite = 1 THEN
-				RAISE EXCEPTION vmessage_d_erreur;
+		IF vidQualification = vq THEN
+			IF vidSpecialite = vs THEN
+				RAISE EXCEPTION '%', vmessage_d_erreur;
 			END IF;
 		END IF;
 		RETURN NEW;
@@ -136,7 +138,7 @@ CREATE TRIGGER check_employe_qualification BEFORE INSERT ON employe_specialite
 /*
 							RESULTAT D'EXECUTION DU TRIGGER
 insert into employe_specialite(id_employe, id_specialite) values(12,1) -- 1 etant l'id de la specialité medecin generaliste
-Resultat : ERREUR:  Un technicien ne peut pas avoir la spécialité Médecin genraliste
+Resultat : ERREUR:  103: Un technicien ne peut pas être medecin généraliste
 
 insert into employe_specialite(id_employe, id_specialite) values(6,1)
 Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 12 ms
@@ -152,11 +154,11 @@ AS $check_equipe_infirmiere_chef$
 		 vmessage_d_erreur	VARCHAR(150);
 		
     BEGIN
-    	vmessage_d_erreur := SELECT afficher_error(104);
+    	SELECT afficher_error(104) into vmessage_d_erreur;
 		SELECT id_infirmiere_chef INTO vid_employe from equipe where id_equipe = NEW.id_equipe;
 		SELECT id_qualification INTO vidQualification from employe_qualification where id_employe = vid_employe;
 		IF vidQualification <> 4 THEN
-			RAISE EXCEPTION vmessage_d_erreur;
+			RAISE EXCEPTION '%', vmessage_d_erreur;
 		END IF;
 		RETURN NEW;
     END;
@@ -177,13 +179,13 @@ ERREUR: Le chef d equipe doit etre infirmiere chef
 CREATE OR REPLACE FUNCTION check_nombre_lit() RETURNS TRIGGER
 AS $check_nombre_lit$
     DECLARE
-		nombre_lit        INTEGER;
+		nombre_lit        	INTEGER;
 		 vmessage_d_erreur	VARCHAR(150);
     BEGIN
-    	vmessage_d_erreur:= SELECT afficher_error(105);
+    	SELECT afficher_error(105) into vmessage_d_erreur;
 		SELECT COUNT(*) INTO nombre_lit FROM chambre_lit WHERE id_chambre = NEW.id_chambre;
 		IF nombre_lit >=4 THEN 
-			RAISE EXCEPTION vmessage_d_erreur;
+			RAISE EXCEPTION '%', vmessage_d_erreur;
 		END IF;
 		RETURN NEW;
     END;
