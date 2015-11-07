@@ -266,7 +266,13 @@ CREATE TABLE employe_quart_travail (
 
 CREATE TABLE affectation_employe (
   id_affectation    INTEGER NOT NULL,
-  id_employe INTEGER NOT NULL
+  id_employe        INTEGER NOT NULL
+);
+
+CREATE SEQUENCE seq_id_error;
+CREATE TABLE error (
+  code_error        INTEGER DEFAULT nextval('seq_id_error'),
+  libelle_error     VARCHAR(150) NOT NULL
 );
 
 -------------------------------------------------------------------------------
@@ -489,3 +495,5 @@ ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe1 FOREIGN K
   REFERENCES affectation (id_affectation);
 ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe2 FOREIGN KEY (id_employe)
   REFERENCES employe (id_employe);
+  
+ALTER TABLE error ADD PRIMARY KEY (code_error);
