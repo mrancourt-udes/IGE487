@@ -37,7 +37,6 @@ CASCADE;
 -------------------------------------------------------------------------------
 -- Debut de la creation des tables
 -------------------------------------------------------------------------------
-
 CREATE SEQUENCE seq_id_lit;
 CREATE TABLE lit (
   id_lit        INTEGER DEFAULT nextval('seq_id_lit')
@@ -94,6 +93,22 @@ CREATE TABLE annuaire (
 
 );
 
+CREATE TABLE ordonnance (
+  id_ordonnance INTEGER,
+  UNIQUE (id_ordonnance)
+);
+
+CREATE TABLE prescription (
+  id_prescription         INTEGER ,
+  id_ordonnance           INTEGER ,
+  validee                 NUMERIC(1) NOT NULL,
+  date                    DATE NOT NULL,
+  dose                    VARCHAR(50) NOT NULL,
+  id_voie_administration  INTEGER NOT NULL,
+  conseils                TEXT NOT NULL,
+  UNIQUE (id_prescription)
+);
+
 CREATE SEQUENCE seq_id_qualification;
 CREATE TABLE qualification (
   id_qualification  INTEGER DEFAULT nextval('seq_id_qualification'),
@@ -125,20 +140,6 @@ CREATE TABLE voie_administration (
     NOT NULL
 );
 
-CREATE SEQUENCE seq_id_prescription;
-CREATE TABLE prescription (
-  id_prescription INTEGER DEFAULT nextval('seq_id_prescription'),
-  validee                 NUMERIC(1) NOT NULL,
-  date                    DATE NOT NULL,
-  dose                    VARCHAR(50) NOT NULL,
-  id_voie_administration  INTEGER NOT NULL,
-  conseils                TEXT NOT NULL
-);
-
-CREATE SEQUENCE seq_id_ordonnance;
-CREATE TABLE ordonnance (
-  id_ordonnance INTEGER DEFAULT nextval('seq_id_ordonnance')
-);
 
 CREATE SEQUENCE seq_id_periode;
 CREATE TABLE periode (
@@ -344,14 +345,6 @@ ALTER TABLE voie_administration ADD CONSTRAINT fk_rescription_voie_administratio
 ALTER SEQUENCE seq_id_voie_administration
   OWNED BY voie_administration.id_voie_administration;
 
-ALTER TABLE prescription ADD PRIMARY KEY(id_prescription);
-ALTER SEQUENCE seq_id_prescription
-  OWNED BY prescription.id_prescription;
-
-ALTER TABLE ordonnance ADD PRIMARY KEY(id_ordonnance);
-ALTER SEQUENCE seq_id_ordonnance
-  OWNED BY ordonnance.id_ordonnance;
-
 ALTER TABLE periode ADD PRIMARY KEY(id_periode);
 ALTER SEQUENCE seq_id_periode
   OWNED BY periode.id_periode;
@@ -436,6 +429,12 @@ ALTER TABLE prescription_medicament ADD CONSTRAINT fk_prescription_medicament1 F
   REFERENCES prescription (id_prescription);
 ALTER TABLE prescription_medicament ADD CONSTRAINT fk_prescription_medicament2 FOREIGN KEY (code_medicament)
   REFERENCES medicament (code_medicament);
+
+ALTER TABLE ordonnance ADD PRIMARY KEY(id_ordonnance);
+
+ALTER TABLE prescription ADD PRIMARY KEY(id_prescription, id_ordonnance);
+ALTER TABLE prescription ADD CONSTRAINT fk_prescription_ordonnance FOREIGN KEY (id_ordonnance)
+  REFERENCES ordonnance (id_ordonnance);
 
 ALTER TABLE format_medicament ADD PRIMARY KEY (id_format, code_medicament);
 ALTER TABLE format_medicament ADD CONSTRAINT fk_format_medicament1 FOREIGN KEY (id_format)

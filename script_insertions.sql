@@ -527,21 +527,21 @@ INSERT INTO ordonnance_patient (id_ordonnance, id_patient) VALUES
   (4, 6),
   (5, 10);
 
-INSERT INTO prescription (validee, date, dose, id_voie_administration, conseils)  VALUES
-  (1, '09-10-2015', 400, 1,
+INSERT INTO prescription (id_prescription, id_ordonnance, validee, date, dose, id_voie_administration, conseils)  VALUES
+  (1,1,1, '09-10-2015', 400, 1,
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida
    nulla non fringilla efficitur. Phasellus vehicula porttitor elementum.'),
-  (1, '09-12-2015', 1200, 2,
+  (2,2,1, '09-12-2015', 1200, 2,
    'Vestibulum quam mauris, congue vitae pretium sit amet, mattis ac ipsum.
    Integer viverra finibus tortor, quis sagittis felis. Nullam varius nibh
    eu lectus euismod, vel malesuada magna euismod.'),
-  (0, '09-13-2015', 50, 2,
+  (3,3,0, '09-13-2015', 50, 2,
    'In mi ex, placerat a est in, consequat auctor libero. Sed pulvinar
    odio sit amet sem finibus, vel porta turpis euismod. Donec vestibulum
    ultrices neque ac accumsan.'),
-  (1, '09-15-2015', 100, 3,
+  (4,4,1, '09-15-2015', 100, 3,
    'In suscipit, ligula at ultrices lacinia, mauris ligula auctor lacus'),
-  (0, '09-16-2015', 10, 1,
+  (5,5,0, '09-16-2015', 10, 1,
    'Condimentum bibendum metus pharetra accumsan. In placerat magna sit
    amet pharetra scelerisque. Quisque ut iaculis ipsum. Maecenas aliquam
     ultricies nisl, at ultricies enim hendrerit at.');
@@ -662,4 +662,6 @@ INSERT INTO error (code_error,libelle_error) VALUES
   (102,'Seuls les medecins et les techniciens peuvent avoir de specialité'),
   (103,'Un technicien ne peut pas être medecin généraliste'),
   (104,'Le chef d equipe doit être Infirmière Chef'),
-  (105,'Cette chambre a atteint son nombre maximum de lits');
+  (105,'Cette chambre a atteint son nombre maximum de lits'),
+  (106,'Pas d affectation à cette date, AFFECTATION URGENTE'),
+  (107,'Il n y a pas de medecin habilité à faire cette administration, AFFECTATION URGENTE');

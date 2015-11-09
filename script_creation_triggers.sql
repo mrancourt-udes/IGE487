@@ -208,17 +208,21 @@ Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requêt
 CREATE OR REPLACE FUNCTION check_affectation() RETURNS TRIGGER AS $check_affectation$
 DECLARE
     v_heure time without time zone;
-    v_code_medicament	INTEGER;
-    v_id_specialite	INTEGER;
-    v_id_qualification	INTEGER;
-    m_specialite	VARCHAR(50);
-    m_qualification	VARCHAR(50);
-    v_id_affectation	INTEGER;
-    v_id_employe	INTEGER;
-    medecin_qualification VARCHAR(50);
-    medecin_specialite    VARCHAR(50);
-    v_id_periode	INTEGER;
+    v_code_medicament		INTEGER;
+    v_id_specialite			INTEGER;
+    v_id_qualification		INTEGER;
+    m_specialite			VARCHAR(50);
+    m_qualification			VARCHAR(50);
+    v_id_affectation		INTEGER;
+    v_id_employe			INTEGER;
+    medecin_qualification 	VARCHAR(50);
+    medecin_specialite    	VARCHAR(50);
+    v_id_periode	      	INTEGER;
+    v_error_pas_affectation VARCHAR(150);
+    v_error_pas_medecin	 	VARCHAR(150);
 BEGIN
+	SELECT afficher_error(106) into v_error_pas_affectation;
+	SELECT afficher_error(107) into v_error_pas_medecin;
 	SELECT id_periode INTO v_id_periode FROM prescription_periode WHERE id_prescription = NEW.id_prescription;
 	SELECT heure into v_heure from periode where id_periode = v_id_periode;
 	SELECT code_medicament INTO v_code_medicament FROM prescription_medicament WHERE id_prescription = NEW.id_prescription;
@@ -229,7 +233,7 @@ BEGIN
 	-- On verifie s'il y'a une affectation à la date indiquée dans la prescription
 	SELECT id_affectation into v_id_affectation from affectation where date = NEW.date;
 	IF v_id_affectation IS NULL THEN
-	   RAISE NOTICE 'Pas d affectation à cette date, AFFECTATION URGENTE';
+	   RAISE NOTICE '%', v_error_pas_affectation;
 	   INSERT INTO affectation(date, urgence) VALUES(NEW.date,1);
 	ELSE
 	   select id_employe into v_id_employe from affectation_employe where id_affectation = v_id_affectation;
@@ -237,7 +241,7 @@ BEGIN
 	   select qualification into medecin_qualification from employe_qualification where id_employe = v_id_employe;
 	   select specialite into medecin_specialite from employe_specialite where id_employe = v_id_employe;
 	   IF (m_specialite <> medecin_specialite and m_qualification <> medecin_qualification) THEN
-		  RAISE NOTICE 'Il n y a pas de medecin habilité à faire cette administration, AFFECTATION URGENTE';
+		  RAISE NOTICE '%', v_error_pas_medecin;
 	   END IF;
 	END IF;
 END;
