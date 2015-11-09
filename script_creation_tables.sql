@@ -16,12 +16,12 @@
 DROP TABLE IF EXISTS
 patient, lit, chambre, unite_soin, sejour, equipe, employe, annuaire,
 qualification, specialite, medicament, format, voie_administration,
-prescription, ordonnance, periode, quart_travail, affectation, patient_lit,
+prescription, ordonnance, periode, quart_travail, affectation,
 chambre_lit, unite_soin_chambre, equipe_unite_soin, employe_equipe,
 employe_qualification, employe_specialite, medecin_traitant,
 qualification_prealable, medicament_specialite, medicament_qualification,
 prescription_medicament, format_medicament, voie_administration_medicament,
-ordonnance_medecin, prescription_periode, periode_quart_travail, affectation_quart_travail,
+prescription_periode, periode_quart_travail, affectation_quart_travail,
 employe_quart_travail, affectation_employe, error
 CASCADE;
 
@@ -52,15 +52,6 @@ CREATE TABLE unite_soin (
   id_unite_soin INTEGER DEFAULT nextval('seq_id_unite_soin')
 );
 
-CREATE TABLE sejour (
-  id_patient INTEGER NOT NULL,
-  date_debut DATE NOT NULL,
-  date_fin DATE NOT NULL,
-  id_unite_soin INTEGER NOT NULL,
-  id_chambre INTEGER NOT NULL,
-  id_lit INTEGER NOT NULL
-);
-
 CREATE SEQUENCE seq_id_employe;
 CREATE TABLE employe (
   id_employe    INTEGER DEFAULT nextval('seq_id_employe'),
@@ -70,13 +61,23 @@ CREATE TABLE employe (
 
 CREATE SEQUENCE seq_id_patient;
 CREATE TABLE patient (
-  id_patient            INTEGER DEFAULT nextval('seq_id_patient'),
+  id_patient      INTEGER UNIQUE DEFAULT nextval('seq_id_patient'),
   nom             VARCHAR(50) NOT NULL,
   prenom          VARCHAR(50) NOT NULL,
   nom_mere        VARCHAR(50) NOT NULL,
   prenom_mere     VARCHAR(50) NOT NULL,
   date_naissance  DATE NOT NULL,
   no_assurance_maladie  VARCHAR(12) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE sejour (
+  id_patient INTEGER NOT NULL,
+  date_debut DATE NOT NULL,
+  date_fin DATE NOT NULL,
+  id_unite_soin INTEGER NOT NULL,
+  id_chambre INTEGER NOT NULL,
+  id_lit INTEGER NOT NULL
 );
 
 CREATE SEQUENCE seq_id_equipe;
@@ -161,11 +162,6 @@ CREATE TABLE affectation (
   urgence           SMALLINT NOT NULL
 );
 
-CREATE TABLE patient_lit (
-  id_patient    INTEGER UNIQUE NOT NULL,
-  id_lit        INTEGER UNIQUE NOT NULL
-);
-
 CREATE TABLE chambre_lit (
   id_chambre    INTEGER NOT NULL,
   id_lit        INTEGER UNIQUE NOT NULL
@@ -233,11 +229,6 @@ CREATE TABLE voie_administration_medicament (
   code_medicament         INTEGER NOT NULL
 );
 
-CREATE TABLE ordonnance_medecin (
-  id_medecin    INTEGER NOT NULL,
-  id_ordonnance INTEGER NOT NULL
-);
-
 CREATE TABLE prescription_periode (
   id_prescription INTEGER NOT NULL,
   id_periode      INTEGER NOT NULL
@@ -274,68 +265,70 @@ CREATE TABLE error (
 -------------------------------------------------------------------------------
 ALTER TABLE lit ADD PRIMARY KEY (id_lit);
 ALTER SEQUENCE seq_id_lit
-  OWNED BY lit.id_lit;
+OWNED BY lit.id_lit;
 
 ALTER TABLE chambre
-  ADD PRIMARY KEY (id_chambre);
+ADD PRIMARY KEY (id_chambre);
 ALTER SEQUENCE seq_id_chambre
-  OWNED BY chambre.id_chambre;
+OWNED BY chambre.id_chambre;
 
 ALTER TABLE unite_soin ADD PRIMARY KEY (id_unite_soin);
 ALTER SEQUENCE seq_id_unite_soin
-  OWNED BY unite_soin.id_unite_soin;
+OWNED BY unite_soin.id_unite_soin;
 
 ALTER TABLE sejour ADD PRIMARY KEY (id_patient, date_debut);
-ALTER TABLE sejour ADD CONSTRAINT fk_sejour1 FOREIGN KEY (id_unite_soin)
+ALTER TABLE sejour ADD CONSTRAINT fk_sejour1 FOREIGN KEY (id_patient)
+REFERENCES patient (id_patient);
+ALTER TABLE sejour ADD CONSTRAINT fk_sejour2 FOREIGN KEY (id_unite_soin)
 REFERENCES unite_soin (id_unite_soin);
-ALTER TABLE sejour ADD CONSTRAINT fk_sejour2 FOREIGN KEY (id_chambre)
+ALTER TABLE sejour ADD CONSTRAINT fk_sejour3 FOREIGN KEY (id_chambre)
 REFERENCES chambre (id_chambre);
-ALTER TABLE sejour ADD CONSTRAINT fk_sejour3 FOREIGN KEY (id_lit)
+ALTER TABLE sejour ADD CONSTRAINT fk_sejour4 FOREIGN KEY (id_lit)
 REFERENCES lit (id_lit);
 
 ALTER TABLE employe ADD PRIMARY KEY(id_employe);
 ALTER SEQUENCE seq_id_employe
-  OWNED BY employe.id_employe;
+OWNED BY employe.id_employe;
 
 ALTER TABLE patient ADD PRIMARY KEY(id_patient);
 ALTER TABLE patient ADD CONSTRAINT pt_date_chk CHECK (date_naissance < now()::date);
 ALTER SEQUENCE seq_id_patient
-  OWNED BY patient.id_patient;
+OWNED BY patient.id_patient;
 
 ALTER TABLE equipe ADD PRIMARY KEY(id_equipe);
 ALTER TABLE equipe ADD CONSTRAINT fk_equipe_infirmiere_chef FOREIGN KEY (id_infirmiere_chef)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 ALTER SEQUENCE seq_id_equipe
-  OWNED BY equipe.id_equipe;
+OWNED BY equipe.id_equipe;
 
 ALTER TABLE annuaire ADD PRIMARY KEY(id_annuaire);
 ALTER TABLE annuaire ADD CONSTRAINT fk_annuaire_employe FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 ALTER SEQUENCE seq_id_annuaire
-  OWNED BY annuaire.id_annuaire;
+OWNED BY annuaire.id_annuaire;
 
 ALTER TABLE qualification ADD PRIMARY KEY(id_qualification);
 ALTER SEQUENCE seq_id_qualification
-  OWNED BY qualification.id_qualification;
+OWNED BY qualification.id_qualification;
 
 ALTER TABLE specialite ADD PRIMARY KEY(id_specialite);
 ALTER SEQUENCE seq_id_specialite
-  OWNED BY specialite.id_specialite;
+OWNED BY specialite.id_specialite;
 
 ALTER TABLE medicament ADD PRIMARY KEY(code_medicament);
 ALTER SEQUENCE seq_code_medicament
-  OWNED BY medicament.code_medicament;
+OWNED BY medicament.code_medicament;
 
 ALTER TABLE format ADD PRIMARY KEY(id_format);
 ALTER TABLE format ADD CONSTRAINT formatchk CHECK (format > 0);
 ALTER SEQUENCE seq_id_format
-  OWNED BY format.id_format;
+OWNED BY format.id_format;
 
 ALTER TABLE voie_administration ADD PRIMARY KEY(id_voie_administration);
 ALTER TABLE voie_administration ADD CONSTRAINT fk_rescription_voie_administration FOREIGN KEY (id_voie_administration)
-  REFERENCES voie_administration (id_voie_administration);
+REFERENCES voie_administration (id_voie_administration);
 ALTER SEQUENCE seq_id_voie_administration
-  OWNED BY voie_administration.id_voie_administration;
+OWNED BY voie_administration.id_voie_administration;
 
 ALTER TABLE prescription ADD PRIMARY KEY(id_prescription, id_ordonnance);
 ALTER TABLE prescription ADD CONSTRAINT fk_prescription1 FOREIGN KEY (id_ordonnance)
@@ -344,144 +337,132 @@ ALTER SEQUENCE seq_id_prescription
 OWNED BY prescription.id_prescription;
 
 ALTER TABLE ordonnance ADD PRIMARY KEY(id_ordonnance);
-ALTER TABLE employe ADD CONSTRAINT fk_ordonnance_1 FOREIGN KEY (id_employe)
+ALTER TABLE ordonnance ADD CONSTRAINT fk_ordonnance_1 FOREIGN KEY (id_employe)
 REFERENCES employe (id_employe);
-ALTER TABLE patient ADD CONSTRAINT fk_ordonnance_2 FOREIGN KEY (id_patient)
+ALTER TABLE ordonnance ADD CONSTRAINT fk_ordonnance_2 FOREIGN KEY (id_patient)
 REFERENCES patient (id_patient);
 ALTER SEQUENCE seq_id_ordonnance
 OWNED BY ordonnance.id_ordonnance;
 
 ALTER TABLE periode ADD PRIMARY KEY(id_periode);
 ALTER SEQUENCE seq_id_periode
-  OWNED BY periode.id_periode;
+OWNED BY periode.id_periode;
 
 ALTER TABLE quart_travail ADD PRIMARY KEY(id_quart_travail);
 ALTER SEQUENCE seq_id_quart_travail
-  OWNED BY quart_travail.id_quart_travail;
+OWNED BY quart_travail.id_quart_travail;
 
 ALTER TABLE affectation ADD PRIMARY KEY(id_affectation);
 ALTER TABLE affectation ADD CONSTRAINT urg_chk CHECK (urgence >= 0 AND urgence <= 1);
 ALTER SEQUENCE seq_id_affectation
-  OWNED BY affectation.id_affectation;
-
-ALTER TABLE patient_lit ADD PRIMARY KEY (id_patient, id_lit);
-ALTER TABLE patient_lit ADD CONSTRAINT fk_patient_lit1 FOREIGN KEY (id_patient)
-  REFERENCES patient (id_patient);
-ALTER TABLE patient_lit ADD CONSTRAINT fk_patient_lit2 FOREIGN KEY (id_lit)
-  REFERENCES lit (id_lit);
+OWNED BY affectation.id_affectation;
 
 ALTER TABLE chambre_lit ADD PRIMARY KEY (id_chambre, id_lit);
 ALTER TABLE chambre_lit ADD CONSTRAINT fk_chambre_lit1 FOREIGN KEY (id_chambre)
-  REFERENCES chambre (id_chambre);
+REFERENCES chambre (id_chambre);
 ALTER TABLE chambre_lit ADD CONSTRAINT fk_chambre_lit2 FOREIGN KEY (id_lit)
-  REFERENCES lit (id_lit);
+REFERENCES lit (id_lit);
 
 ALTER TABLE unite_soin_chambre ADD PRIMARY KEY (id_unite_soin, id_chambre);
 ALTER TABLE unite_soin_chambre ADD CONSTRAINT fk_unite_soin_chambre1 FOREIGN KEY (id_unite_soin)
-  REFERENCES unite_soin (id_unite_soin);
+REFERENCES unite_soin (id_unite_soin);
 ALTER TABLE unite_soin_chambre ADD CONSTRAINT fk_unite_soin_chambre2 FOREIGN KEY (id_chambre)
-  REFERENCES chambre (id_chambre);
+REFERENCES chambre (id_chambre);
 
 ALTER TABLE equipe_unite_soin ADD PRIMARY KEY (id_equipe, id_unite_soin);
 ALTER TABLE equipe_unite_soin ADD CONSTRAINT fk_equipe_unite_soin1 FOREIGN KEY (id_equipe)
-  REFERENCES equipe (id_equipe);
+REFERENCES equipe (id_equipe);
 ALTER TABLE equipe_unite_soin ADD CONSTRAINT fk_equipe_unite_soin2 FOREIGN KEY (id_unite_soin)
-  REFERENCES unite_soin (id_unite_soin);
+REFERENCES unite_soin (id_unite_soin);
 
 ALTER TABLE employe_equipe ADD PRIMARY KEY (id_equipe, id_employe);
 ALTER TABLE employe_equipe ADD CONSTRAINT fk_employe_equipe2 FOREIGN KEY (id_equipe)
-  REFERENCES equipe (id_equipe);
+REFERENCES equipe (id_equipe);
 ALTER TABLE employe_equipe ADD CONSTRAINT fk_employe_equipe1 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 
 ALTER TABLE employe_qualification ADD PRIMARY KEY (id_employe, id_qualification);
 ALTER TABLE employe_qualification ADD CONSTRAINT fk_employe_qualification1 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 ALTER TABLE employe_qualification ADD CONSTRAINT fk_employe_qualification2 FOREIGN KEY (id_qualification)
-  REFERENCES qualification (id_qualification);
+REFERENCES qualification (id_qualification);
 
 ALTER TABLE employe_specialite ADD PRIMARY KEY (id_employe, id_specialite);
 ALTER TABLE employe_specialite ADD CONSTRAINT fk_employe_specialite1 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 ALTER TABLE employe_specialite ADD CONSTRAINT fk_employe_specialite2 FOREIGN KEY (id_specialite)
-  REFERENCES specialite (id_specialite);
+REFERENCES specialite (id_specialite);
 
 ALTER TABLE medecin_traitant ADD PRIMARY KEY(id_employe, id_patient, date_debut);
-  ALTER TABLE medecin_traitant ADD CONSTRAINT fk_medecin_traitant1 FOREIGN KEY (id_employe)
+ALTER TABLE medecin_traitant ADD CONSTRAINT fk_medecin_traitant1 FOREIGN KEY (id_employe)
 REFERENCES employe (id_employe);
-  ALTER TABLE medecin_traitant ADD CONSTRAINT fk_medecin_traitant2 FOREIGN KEY (id_patient, date_debut)
+ALTER TABLE medecin_traitant ADD CONSTRAINT fk_medecin_traitant2 FOREIGN KEY (id_patient, date_debut)
 REFERENCES sejour (id_patient, date_debut);
 
 ALTER TABLE qualification_prealable ADD PRIMARY KEY (id_qualification, id_prealable);
 ALTER TABLE qualification_prealable ADD CONSTRAINT fk_qualification_qualification1 FOREIGN KEY (id_qualification)
-  REFERENCES qualification (id_qualification);
+REFERENCES qualification (id_qualification);
 ALTER TABLE qualification_prealable ADD CONSTRAINT fk_qualification_qualification2 FOREIGN KEY (id_qualification)
-  REFERENCES qualification (id_qualification);
+REFERENCES qualification (id_qualification);
 
 ALTER TABLE medicament_specialite ADD PRIMARY KEY (code_medicament, id_specialite);
 ALTER TABLE medicament_specialite ADD CONSTRAINT fk_medicament_specialite1 FOREIGN KEY (code_medicament)
-  REFERENCES medicament (code_medicament);
+REFERENCES medicament (code_medicament);
 ALTER TABLE medicament_specialite ADD CONSTRAINT fk_medicament_specialite2 FOREIGN KEY (id_specialite)
-  REFERENCES specialite (id_specialite);
+REFERENCES specialite (id_specialite);
 
 ALTER TABLE medicament_qualification ADD PRIMARY KEY (code_medicament, id_qualification);
 ALTER TABLE medicament_qualification ADD CONSTRAINT fk_medicament_qualification1 FOREIGN KEY (code_medicament)
-  REFERENCES medicament (code_medicament);
+REFERENCES medicament (code_medicament);
 ALTER TABLE medicament_qualification ADD CONSTRAINT fk_medicament_qualification2 FOREIGN KEY (id_qualification)
-  REFERENCES qualification (id_qualification);
+REFERENCES qualification (id_qualification);
 
 ALTER TABLE prescription_medicament ADD PRIMARY KEY (id_prescription, code_medicament);
 ALTER TABLE prescription_medicament ADD CONSTRAINT fk_prescription_medicament1 FOREIGN KEY (id_prescription)
-  REFERENCES prescription (id_prescription);
+REFERENCES prescription (id_prescription);
 ALTER TABLE prescription_medicament ADD CONSTRAINT fk_prescription_medicament2 FOREIGN KEY (code_medicament)
-  REFERENCES medicament (code_medicament);
+REFERENCES medicament (code_medicament);
 
 ALTER TABLE format_medicament ADD PRIMARY KEY (id_format, code_medicament);
 ALTER TABLE format_medicament ADD CONSTRAINT fk_format_medicament1 FOREIGN KEY (id_format)
-  REFERENCES format (id_format);
+REFERENCES format (id_format);
 ALTER TABLE format_medicament ADD CONSTRAINT fk_format_medicament2 FOREIGN KEY (code_medicament)
-  REFERENCES medicament (code_medicament);
+REFERENCES medicament (code_medicament);
 
 ALTER TABLE voie_administration_medicament ADD PRIMARY KEY (id_voie_administration, code_medicament);
 ALTER TABLE voie_administration_medicament ADD CONSTRAINT fk_voie_administration_medicament1 FOREIGN KEY (id_voie_administration)
-  REFERENCES voie_administration (id_voie_administration);
+REFERENCES voie_administration (id_voie_administration);
 ALTER TABLE voie_administration_medicament ADD CONSTRAINT fk_voie_administration_medicament2 FOREIGN KEY (code_medicament)
-  REFERENCES medicament (code_medicament);
-
-ALTER TABLE ordonnance_medecin ADD PRIMARY KEY (id_medecin, id_ordonnance);
-ALTER TABLE ordonnance_medecin ADD CONSTRAINT fk_employe_ordonnance1 FOREIGN KEY (id_medecin)
-  REFERENCES employe (id_employe);
-ALTER TABLE ordonnance_medecin ADD CONSTRAINT fk_employe_ordonnance2 FOREIGN KEY (id_ordonnance)
-  REFERENCES ordonnance (id_ordonnance);
+REFERENCES medicament (code_medicament);
 
 ALTER TABLE prescription_periode ADD PRIMARY KEY (id_prescription, id_periode);
 ALTER TABLE prescription_periode ADD CONSTRAINT fk_prescription_periode1 FOREIGN KEY (id_prescription)
-  REFERENCES prescription (id_prescription);
+REFERENCES prescription (id_prescription);
 ALTER TABLE prescription_periode ADD CONSTRAINT fk_prescription_periode2 FOREIGN KEY (id_periode)
-  REFERENCES periode (id_periode);
+REFERENCES periode (id_periode);
 
 ALTER TABLE periode_quart_travail ADD PRIMARY KEY (id_periode, id_quart_travail);
 ALTER TABLE periode_quart_travail ADD CONSTRAINT fk_periode_quart_travail1 FOREIGN KEY (id_periode)
-  REFERENCES periode (id_periode);
+REFERENCES periode (id_periode);
 ALTER TABLE periode_quart_travail ADD CONSTRAINT fk_periode_quart_travail2 FOREIGN KEY (id_quart_travail)
-  REFERENCES quart_travail (id_quart_travail);
+REFERENCES quart_travail (id_quart_travail);
 
 ALTER TABLE affectation_quart_travail ADD PRIMARY KEY (id_affectation, id_quart_travail);
 ALTER TABLE affectation_quart_travail ADD CONSTRAINT fk_affectation_quart_travail1 FOREIGN KEY (id_affectation)
-  REFERENCES affectation (id_affectation);
+REFERENCES affectation (id_affectation);
 ALTER TABLE affectation_quart_travail ADD CONSTRAINT fk_affectation_quart_travail2 FOREIGN KEY (id_quart_travail)
-  REFERENCES quart_travail (id_quart_travail);
+REFERENCES quart_travail (id_quart_travail);
 
 ALTER TABLE employe_quart_travail ADD PRIMARY KEY(id_employe,id_quart_travail);
 ALTER TABLE employe_quart_travail ADD CONSTRAINT fk_employe_quart_travail1 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 ALTER TABLE employe_quart_travail ADD CONSTRAINT fk_employe_quart_travail2 FOREIGN KEY (id_quart_travail)
-  REFERENCES quart_travail (id_quart_travail);
+REFERENCES quart_travail (id_quart_travail);
 
 ALTER TABLE affectation_employe ADD PRIMARY KEY (id_affectation, id_employe);
 ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe1 FOREIGN KEY (id_affectation)
-  REFERENCES affectation (id_affectation);
+REFERENCES affectation (id_affectation);
 ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe2 FOREIGN KEY (id_employe)
-  REFERENCES employe (id_employe);
+REFERENCES employe (id_employe);
 
 ALTER TABLE error ADD PRIMARY KEY (code_error);

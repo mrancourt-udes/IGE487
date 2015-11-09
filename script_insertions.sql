@@ -19,12 +19,12 @@
 TRUNCATE
 patient, lit, chambre, unite_soin, equipe, employe, annuaire, qualification,
 specialite, medicament, format, voie_administration, prescription, ordonnance,
-periode, quart_travail, affectation, patient_lit, chambre_lit,
+periode, quart_travail, affectation, chambre_lit,
 unite_soin_chambre, equipe_unite_soin, employe_equipe, employe_qualification,
 employe_specialite, qualification_prealable, medicament_specialite,
 medicament_qualification, prescription_medicament, format_medicament,
-voie_administration_medicament, ordonnance_prescription, ordonnance_medecin,
-ordonnance_patient, prescription_periode, periode_quart_travail,
+voie_administration_medicament,
+prescription_periode, periode_quart_travail,
 affectation_quart_travail, employe_quart_travail, error
 RESTART IDENTITY CASCADE;
 
@@ -377,14 +377,6 @@ INSERT INTO equipe_unite_soin (id_equipe, id_unite_soin)  VALUES
   (2, 3),
   (2, 4);
 
-INSERT INTO patient_lit (id_patient, id_lit) VALUES
-  (1,6),
-  (2,7),
-  (3,4),
-  (7,2),
-  (8,3),
-  (10,9);
-
 
 INSERT INTO sejour(id_patient, date_debut, date_fin, id_unite_soin, id_chambre, id_lit) VALUES
   (1, '11-02-2015', '11-12-2015', 1, 1, 3),
@@ -531,13 +523,6 @@ INSERT INTO prescription (id_ordonnance, validee, dose, id_voie_administration, 
    'Condimentum bibendum metus pharetra accumsan. In placerat magna sit
    amet pharetra scelerisque. Quisque ut iaculis ipsum. Maecenas aliquam
     ultricies nisl, at ultricies enim hendrerit at.');
-
-INSERT INTO ordonnance_prescription (id_ordonnance, id_prescription) VALUES
-  (1,1),
-  (2,2),
-  (3,4),
-  (4,5),
-  (5,3);
 
 INSERT INTO prescription_medicament (id_prescription, code_medicament) VALUES
   (1, 02244366),
