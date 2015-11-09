@@ -506,42 +506,28 @@ INSERT INTO voie_administration_medicament (id_voie_administration, code_medicam
   (3,02238560),
   (3,02182963);
 
-INSERT INTO ordonnance (id_ordonnance) VALUES
-  (1),
-  (2),
-  (3),
-  (4),
-  (5);
+INSERT INTO ordonnance (id_ordonnance, id_employe, id_patient, date_emission, date_fin) VALUES
+  (1, 6, 2, '09-10-2015', '09-10-2015'),
+  (2, 9, 4, '09-12-2015', '09-12-2015'),
+  (3, 17, 5, '09-13-2015', '09-13-2015'),
+  (4, 17, 6, '09-15-2015', '09-15-2015'),
+  (5, 21, 10, '09-16-2015', '09-16-2015');
 
-INSERT INTO ordonnance_medecin (id_medecin, id_ordonnance) VALUES
-  (6, 1),
-  (9, 2),
-  (17, 3),
-  (17, 4),
-  (21, 5);
-
-INSERT INTO ordonnance_patient (id_ordonnance, id_patient) VALUES
-  (1, 2),
-  (2, 4),
-  (3, 5),
-  (4, 6),
-  (5, 10);
-
-INSERT INTO prescription (validee, date, dose, id_voie_administration, conseils)  VALUES
-  (1, '09-10-2015', 400, 1,
+INSERT INTO prescription (id_ordonnance, validee, dose, id_voie_administration, conseils)  VALUES
+  (1, 1, 400, 1,
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida
    nulla non fringilla efficitur. Phasellus vehicula porttitor elementum.'),
-  (1, '09-12-2015', 1200, 2,
+  (2, 1, 1200, 2,
    'Vestibulum quam mauris, congue vitae pretium sit amet, mattis ac ipsum.
    Integer viverra finibus tortor, quis sagittis felis. Nullam varius nibh
    eu lectus euismod, vel malesuada magna euismod.'),
-  (0, '09-13-2015', 50, 2,
+  (3, 0, 50, 2,
    'In mi ex, placerat a est in, consequat auctor libero. Sed pulvinar
    odio sit amet sem finibus, vel porta turpis euismod. Donec vestibulum
    ultrices neque ac accumsan.'),
-  (1, '09-15-2015', 100, 3,
+  (4, 1, 100, 3,
    'In suscipit, ligula at ultrices lacinia, mauris ligula auctor lacus'),
-  (0, '09-16-2015', 10, 1,
+  (5, 0, 10, 1,
    'Condimentum bibendum metus pharetra accumsan. In placerat magna sit
    amet pharetra scelerisque. Quisque ut iaculis ipsum. Maecenas aliquam
     ultricies nisl, at ultricies enim hendrerit at.');
