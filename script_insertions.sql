@@ -648,4 +648,6 @@ INSERT INTO error (code_error,libelle_error) VALUES
   (102,'Seuls les medecins et les techniciens peuvent avoir de specialité'),
   (103,'Un technicien ne peut pas être medecin généraliste'),
   (104,'Le chef d equipe doit être Infirmière Chef'),
-  (105,'Cette chambre a atteint son nombre maximum de lits');
+  (105,'Cette chambre a atteint son nombre maximum de lits'),
+  (106,'Pas d affectation à cette date, AFFECTATION URGENTE'),
+  (107,'Il n y a pas de medecin habilité à faire cette administration, AFFECTATION URGENTE');
