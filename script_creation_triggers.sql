@@ -1,7 +1,7 @@
 /* *****************************************************************************
 ** File: script_creation_triggers.sql
-** Desc: Script de creation des triggers et leurs resultats d'exécution en commentaire
-**       Travail pratique 1 - Modélisation-conception d'une base de données
+** Desc: Script de creation des triggers et leurs resultats d'exÃ©cution en commentaire
+**       Travail pratique 1 - ModÃ©lisation-conception d'une base de donnÃ©es
 **       Dans le cadre du cours IGE-487
 **       modelisation de base de donnees
 ** Auth: Martin Rancourt
@@ -9,8 +9,8 @@
 		 Mamadou Cellou Soto Diallo      
 ** Date: 15-09-2015
 ***************************************************************************** */
--- Cette procedure permet pour un code d'erreur passé en parmètre d'afficher un message d'erreur formaté code_error+message d'erreur
--- Elle sera donc appelé à chaque fois qu'il y'aura besoin de lever une erreur
+-- Cette procedure permet pour un code d'erreur passe en parmetre d'afficher un message d'erreur formate code_error+message d'erreur
+-- Elle sera donc appele a chaque fois qu'il y'aura besoin de lever une erreur
 CREATE OR REPLACE FUNCTION afficher_error(code INTEGER) RETURNS VARCHAR AS $$
 	DECLARE 
 		vmessage_error	VARCHAR(150);
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION afficher_error(code INTEGER) RETURNS VARCHAR AS $$
     END;
     $$ LANGUAGE plpgsql;
 
--- Ce trigger permet de vérifier que l'employé qui établit une ordonnance est bien un medecin
+-- Ce trigger permet de verifier que l'employe qui etablit une ordonnance est bien un medecin
 CREATE OR REPLACE FUNCTION ordonnance_check_medecin() RETURNS TRIGGER
 AS $ordonnance_check_medecin$
     DECLARE
@@ -48,11 +48,11 @@ insert into ordonnance_medecin(id_ordonnance, id_medecin) values(5,19)
 Resultat: ERREUR:  100: Seul un medecin peut etablir une ordonnance 
 
 insert into ordonnance_medecin(id_ordonnance, id_medecin) values(5,18)
-Resultat: La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 67 ms
+Resultat: La requete a ete executee avec succes : une ligne modifiee. La requete a ete executee en 67 ms
 
 */
 
--- Ce trigger permet de s'assurere que le medecin affecté à un patient est bien un médecin generaliste
+-- Ce trigger permet de s'assurere que le medecin affecte a un patient est bien un medecin generaliste
 CREATE OR REPLACE FUNCTION medecin_check() RETURNS TRIGGER
 AS $medecin_check$
     DECLARE
@@ -75,15 +75,15 @@ CREATE TRIGGER medecin_check BEFORE INSERT ON patient
 							RESULTAT D'EXECUTION DU TRIGGER
 insert into patient(nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie, id_employe) values
 ('laporte', 'christian', 'grevet', 'jessica','21-10-1992','lowk7658269',5)
-Resultat : ERREUR:  101: Seul un medecin généraliste peut être affecté à un patient 
+Resultat : ERREUR:  101: Seul un medecin generaliste peut etre affecte a un patient
 
 insert into patient(nom, prenom, nom_mere, prenom_mere, date_naissance, no_assurance_maladie, id_employe) values
 ('laporte', 'christian', 'grevet', 'jessica','21-10-1992','lowk7658269',3)
-Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 45 ms.
+Resultat : La requete a ete executee avec succes : une ligne modifiee. La requete a ete executee en 45 ms.
 
 */
   
--- Ce trigger permet de s'assurer que seuls les medecins et les techniciens peuvent avoir de spécialité
+-- Ce trigger permet de s'assurer que seuls les medecins et les techniciens peuvent avoir de specialite
   CREATE OR REPLACE FUNCTION check_employe_specialite() RETURNS TRIGGER AS $check_employe_specialite$
     DECLARE
 		vidQualification	INTEGER;
@@ -104,12 +104,12 @@ CREATE TRIGGER check_employe_specialite BEFORE INSERT ON employe_specialite
 /*
 							RESULTAT D'EXECUTION DU TRIGGER
 insert into employe_specialite(id_employe, id_specialite) values(20,6)
-Resulat : ERREUR:   102: Seuls les medecins et les techniciens peuvent avoir de specialité
+Resulat : ERREUR:   102: Seuls les medecins et les techniciens peuvent avoir de specialite
 
 insert into employe_specialite(id_employe, id_specialite) values(18,6)-- cas d'un medecin
-Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 13 ms.
+Resultat : La requete a ete executee avec succes : une ligne modifiee. La requete a ete executee en 13 ms.
 */
--- Ce trigger permet de s'assurer qu'un employé avec la qualification technicien ne puisse pas avoir la spécialité Medecin generaliste
+-- Ce trigger permet de s'assurer qu'un employe avec la qualification technicien ne puisse pas avoir la specialite Medecin generaliste
 CREATE OR REPLACE FUNCTION check_employe_qualification() RETURNS TRIGGER
 AS $check_employe_qualification$
     DECLARE
@@ -137,15 +137,15 @@ CREATE TRIGGER check_employe_qualification BEFORE INSERT ON employe_specialite
     FOR EACH ROW EXECUTE PROCEDURE check_employe_qualification();
 /*
 							RESULTAT D'EXECUTION DU TRIGGER
-insert into employe_specialite(id_employe, id_specialite) values(12,1) -- 1 etant l'id de la specialité medecin generaliste
-Resultat : ERREUR:  103: Un technicien ne peut pas être medecin généraliste
+insert into employe_specialite(id_employe, id_specialite) values(12,1) -- 1 etant l'id de la specialite medecin generaliste
+Resultat : ERREUR:  103: Un technicien ne peut pas etre medecin generaliste
 
 insert into employe_specialite(id_employe, id_specialite) values(6,1)
-Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 12 ms
+Resultat : La requete a ete executee avec succes : une ligne modifiee. La requete a ete executee en 12 ms
 
 */
 
--- Ce trigger permet de s'assurer qu'une equipe possède une infirmiere chef
+-- Ce trigger permet de s'assurer qu'une equipe possede une infirmiere chef
 CREATE OR REPLACE FUNCTION check_equipe_infirmiere_chef() RETURNS TRIGGER
 AS $check_equipe_infirmiere_chef$
     DECLARE
@@ -172,7 +172,7 @@ ERREUR:  Le chef d equipe doit etre infirmiere chef
 ********** Erreur **********
 
 ERREUR: Le chef d equipe doit etre infirmiere chef
-État SQL :P0001
+etat SQL :P0001
 
 */
 -- Ce trigger permet de s'assurer que dans une chambre il y'a pas plus de 4 lits 
@@ -201,10 +201,10 @@ insert into chambre_lit(id_chambre, id_lit) values(2,4) -- la chambre 2 etant de
 Resultat  : ERREUR:  Cette chambre a deja atteint son nombre maxiamal de lits.
 
 insert into chambre_lit(id_chambre, id_lit) values(3,4) -- la chambre 3 n'etant pas encore plein
-Resultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 13 ms.
+Resultat : La requete a ete executee avec succes : une ligne modifiee. La requete a ete executee en 13 ms.
 
 */
--- Ce trigger permet de verifier lors d'une prescription qu'il y'a bien le personnel habilité à faire l'administration des produits
+-- Ce trigger permet de verifier lors d'une prescription qu'il y'a bien le personnel habilite a faire l'administration des produits
 CREATE OR REPLACE FUNCTION check_affectation() RETURNS TRIGGER AS $check_affectation$
 DECLARE
     v_heure time without time zone;
@@ -226,18 +226,18 @@ BEGIN
 	SELECT id_qualification INTO v_id_qualification FROM medicament_qualification WHERE code_medicament = v_code_medicament;
 	SELECT specialite INTO m_specialite FROM specialite WHERE id_specialite = v_id_specialite;
 	SELECT qualification INTO m_qualification FROM qualification WHERE id_qualification = v_id_qualification;
-	-- On verifie s'il y'a une affectation à la date indiquée dans la prescription
+	-- On verifie s'il y'a une affectation a la date indiquee dans la prescription
 	SELECT id_affectation into v_id_affectation from affectation where date = NEW.date;
 	IF v_id_affectation IS NULL THEN
-	   RAISE NOTICE 'Pas d affectation à cette date, AFFECTATION URGENTE';
+	   RAISE NOTICE 'Pas d affectation Ã  cette date, AFFECTATION URGENTE';
 	   INSERT INTO affectation(date, urgence) VALUES(NEW.date,1);
 	ELSE
 	   select id_employe into v_id_employe from affectation_employe where id_affectation = v_id_affectation;
-	   -- On selectionne la qualification et la specialité de l'employé pour comparer avec celles du medicament.
+	   -- On selectionne la qualification et la specialite de l'employe pour comparer avec celles du medicament.
 	   select qualification into medecin_qualification from employe_qualification where id_employe = v_id_employe;
 	   select specialite into medecin_specialite from employe_specialite where id_employe = v_id_employe;
 	   IF (m_specialite <> medecin_specialite and m_qualification <> medecin_qualification) THEN
-		  RAISE NOTICE 'Il n y a pas de medecin habilité à faire cette administration, AFFECTATION URGENTE';
+		  RAISE NOTICE 'Il n y a pas de medecin habilitÃ© Ã  faire cette administration, AFFECTATION URGENTE';
 	   END IF;
 	END IF;
 END;
@@ -253,8 +253,5 @@ INSERT INTO prescription (validee, date, dose, id_voie_administration, conseils)
   (1, '09-10-2013', 400, 1,
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida
    nulla non fringilla efficitur.')
-Resultat : ERREUR:  Pas d affectation à cette date, AFFECTATION URGENTE
+Resultat : ERREUR:  Pas d affectation a cette date, AFFECTATION URGENTE
 */
-
-
-
