@@ -124,3 +124,24 @@ CREATE OR REPLACE VIEW vue_affectation AS
 $$ LANGUAGE plpgsql;
 
 select insert_dim_affectation();
+
+--vue quart de travail
+
+SELECT dblink_connect('myconnec','hostaddr=10.44.88.226 dbname=TP3 user=postgres password=Tg18rm55$26');
+CREATE OR REPLACE VIEW vue_quart_travail AS
+  SELECT *
+    FROM dblink('myconnec', 'select id_quart_travail from quart_travail')
+    AS t5(id_quart_travail INTEGER);
+ 
+ CREATE OR REPLACE FUNCTION insert_dim_quart_travail() RETURNS void AS $$
+    DECLARE
+    ma_ligne   vue_quart_travail%ROWTYPE;
+   
+    BEGIN
+    FOR ma_ligne IN SELECT * FROM vue_affectation LOOP
+       insert into affectation(id_affectation, date, urgence) values(ma_ligne.id_affectation, ma_ligne.date, ma_ligne.urgence);
+    END LOOP;
+    END;
+$$ LANGUAGE plpgsql;
+
+select insert_dim_affectation();
