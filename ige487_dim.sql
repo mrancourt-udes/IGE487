@@ -76,7 +76,8 @@ CREATE TABLE prescription_fact (
   code_patient               INTEGER,
   code_prescription          INTEGER,
   code_employe               INTEGER,
-  PRIMARY KEY(code_patient, code_prescription, code_employe)
+  code_medicament            INTEGER,
+  PRIMARY KEY(code_patient, code_prescription, code_employe; code_medicament)
 );
 
 

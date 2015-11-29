@@ -55,11 +55,13 @@ CREATE OR REPLACE VIEW vue_medecin_traitant AS
 
 CREATE OR REPLACE VIEW vue_prescriptions AS
   SELECT *
-    FROM dblink('myconnec', 'select patient.id_patient, prescription.id_prescription, employe.id_employe from patient, employe, ordonnance, prescription where 
+    FROM dblink('myconnec', 'select patient.id_patient, prescription.id_prescription, employe.id_employe, medicament.code_medicament from patient, employe, ordonnance, prescription, medicament, prescription_medicament where 
     ordonnance.id_ordonnance = prescription.id_ordonnance  and 
     ordonnance.id_patient=patient.id_patient and 
-    ordonnance.id_employe = employe.id_employe')
-    AS t9(id_patient INTEGER, id_prescription INTEGER, id_employe INTEGER);
+    ordonnance.id_employe = employe.id_employe and
+    prescription.id_prescription = prescription_medicament.id_prescription and
+    medicament.code_medicament = prescription_medicament.code_medicament')
+    AS t9(id_patient INTEGER, id_prescription INTEGER, id_employe INTEGER, code_medicament INTEGER);
 
 CREATE OR REPLACE VIEW vue_admission AS
   SELECT *
@@ -179,12 +181,14 @@ l vue_prescriptions%ROWTYPE;
 p_code integer;
 e_code integer;
 pr_code integer;
+m_code  integer;
 begin
 	for l in select * from vue_prescriptions loop
 		select code_patient into p_code from patient where id_patient=l.id_patient;
 		select code_employe into e_code from employe where id_employe = l.id_employe;
 		select code_prescription into pr_code from prescription where id_prescription = l.id_prescription;
-		insert into prescription_fact values(p_code, pr_code, e_code);
+		select id_medicament into m_code from medicament where code_medicament = l.code_medicament;
+		insert into prescription_fact values(p_code, pr_code, e_code, m_code);
 	end loop;
 end;
 $$ LANGUAGE plpgsql;
