@@ -10,9 +10,11 @@
 
 ** Date: 28-11-2015
 ******************************************************************************/
-
+/** Cette partie permet de créer une connection vers la base de données transactionnelle de depart afin d'y extraire les données **/
 CREATE EXTENSION dblink;
 SELECT dblink_connect('myconnec','hostaddr=10.44.88.226 dbname=TP3 user=postgres password=Tg18rm55$26');
+
+/* Création des vues pour l'alimentations des tables de dimensions de l'entrepot */
 
 CREATE OR REPLACE VIEW vue_emp AS
   SELECT *
@@ -53,6 +55,8 @@ CREATE OR REPLACE VIEW vue_medecin_traitant AS
     FROM dblink('myconnec', 'select id_employe, id_patient from medecin_traitant')
     AS t8(id_employe INTEGER, id_patient INTEGER);
 
+/* Création des vues pour l'alimentations des tables de fait de l'entrepot */
+
 CREATE OR REPLACE VIEW vue_prescriptions AS
   SELECT *
     FROM dblink('myconnec', 'select patient.id_patient, prescription.id_prescription, employe.id_employe, medicament.code_medicament from patient, employe, ordonnance, prescription, medicament, prescription_medicament where 
@@ -80,6 +84,8 @@ CREATE OR REPLACE VIEW vue_affectations AS
     affectation_quart_travail.id_affectation = affectation.id_affectation
     ')
     AS t11(id_employe INTEGER, id_quart_travail INTEGER, id_affectation INTEGER);
+
+/* Création des procedures d'alimentation des tables dimensionnelles */
 
 CREATE OR REPLACE FUNCTION insert_dim_employe() RETURNS void AS $$
     DECLARE
@@ -157,6 +163,8 @@ CREATE OR REPLACE FUNCTION insert_dim_quart_travail() RETURNS void AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+/* Création des procédures d'alimentation des tables fait */
+
 create or replace function insert_admission_fact() returns void as $$
 declare
 l vue_admission%ROWTYPE;
@@ -223,6 +231,9 @@ begin
 	end loop;
 end;
 $$ LANGUAGE plpgsql;
+
+/* Execution des procédures d'alimentation de l'entrepot écrites ci-dessus */
+
 select insert_dim_employe();
 select insert_dim_patient();
 select insert_dim_sejour();
