@@ -3,7 +3,7 @@
 -------------------------------------------------------------------------------
 
 /******************************************************************************
-** File: script_insertions.sql
+** File: ige487_ini.sql
 ** Desc: Script d'insertion des donnes tests
 **       Travail pratique 1 - Modélisation-conception d'une base de données
 **       Dans le cadre du cours IGE-487

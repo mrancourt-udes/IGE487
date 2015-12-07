@@ -1,5 +1,5 @@
 /******************************************************************************
-** File: script_creation_tables.sql
+** File: ige487_tra.sql
 ** Desc: Script de creation de tables
 **       Travail pratique 1 - Modélisation-conception d'une base de données
 **       Dans le cadre du cours IGE-487
