@@ -303,7 +303,7 @@ CREATE TABLE annuaire_numero_telephone_DURING (
 );
 
 --------------------qualification--------------------
-
+/* TODO : Check if we are not missing an attribute */
 CREATE SEQUENCE seq_id_qualification;
 CREATE TABLE qualification_SINCE (
   id_qualification  INTEGER DEFAULT nextval('seq_id_qualification'),
@@ -849,13 +849,13 @@ CREATE TABLE error_SINCE (
 );
 
 CREATE TABLE error_DURING (
-  code_error        INTEGER DEFAULT nextval('seq_id_error'),
+  code_error        INTEGER NOT NULL,
 	debut	DATE NOT NULL,
 	fin	DATE NOT NULL
 );
 
 CREATE TABLE error_libelle_error_DURING (
-  code_error        INTEGER DEFAULT nextval('seq_id_error'),
+  code_error        INTEGER NOT NULL,
   libelle_error     VARCHAR(150) NOT NULL,
 	debut	DATE NOT NULL,
 	fin	DATE NOT NULL

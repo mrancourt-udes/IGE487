@@ -13,6 +13,8 @@
 ** Date: 15-09-2015
 ******************************************************************************/
 
+SET search_path TO tra;
+
 -------------------------------------------------------------------------------
 -- Nettoyage complet des donnees et des sequences
 -------------------------------------------------------------------------------
@@ -636,3 +638,6 @@ INSERT INTO error (code_error,libelle_error) VALUES
   (105,'Cette chambre a atteint son nombre maximum de lits'),
   (106,'Pas d affectation à cette date, AFFECTATION URGENTE'),
   (107,'Il n y a pas de medecin habilité à faire cette administration, AFFECTATION URGENTE');
+
+/* Set schema back to default */
+SET search_path TO public;
