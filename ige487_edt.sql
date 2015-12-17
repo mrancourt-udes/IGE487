@@ -10,6 +10,9 @@
 ** Date: 17-12-2015
 ******************************************************************************/
 
+CREATE SCHEMA IF NOT EXISTS edt AUTHORIZATION postgres;
+SET search_path TO edt;
+
 -------------------------------------------------------------------------------
 -- Nettoyage complet de la base de donnees
 -------------------------------------------------------------------------------
@@ -1561,3 +1564,6 @@ ALTER TABLE error_libelle_error_DURING ADD PRIMARY KEY(code_error, debut, fin);
 ALTER TABLE error_DURING ADD CONSTRAINT error_libelle_DURING_date_Chk CHECK (debut <= fin);
 ALTER TABLE error_libelle_error_DURING ADD CONSTRAINT fk_error_libelle_error_code_error FOREIGN KEY(code_error)
 REFERENCES error_SINCE (code_error);
+
+/* Set schema back to default */
+SET search_path TO public;

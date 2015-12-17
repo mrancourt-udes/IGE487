@@ -1,5 +1,5 @@
 /******************************************************************************
-** File: ige487_tra.sql
+** File: script_creation_tables.sql
 ** Desc: Script de creation de tables
 **       Travail pratique 1 - Modélisation-conception d'une base de données
 **       Dans le cadre du cours IGE-487
@@ -9,6 +9,9 @@
 **       Martin Rancourt
 ** Date: 15-09-2015
 ******************************************************************************/
+
+CREATE SCHEMA IF NOT EXISTS tra AUTHORIZATION postgres;
+SET search_path TO tra;
 
 -------------------------------------------------------------------------------
 -- Nettoyage complet de la base de donnees
@@ -466,3 +469,6 @@ ALTER TABLE affectation_employe ADD CONSTRAINT fk_affectation_employe2 FOREIGN K
 REFERENCES employe (id_employe);
 
 ALTER TABLE error ADD PRIMARY KEY (code_error);
+
+/* Set schema back to default */
+SET search_path TO public;
