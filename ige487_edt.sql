@@ -10,14 +10,11 @@
 ** Date: 17-12-2015
 ******************************************************************************/
 
-CREATE SCHEMA IF NOT EXISTS edt AUTHORIZATION postgres;
-SET search_path TO edt;
-
 -------------------------------------------------------------------------------
 -- Nettoyage complet de la base de donnees
 -------------------------------------------------------------------------------
 DROP TABLE IF EXISTS
-employe_nom_during,employe_prenom_during,
+employe_nom_temp,employe_prenom_temp,employe_nom_during,employe_prenom_during,
 patient_since,patient_during,patient_nom_during,patient_prenom_during,
 patient_nom_mere_during,patient_prenom_mere_during,patient_date_naissance_during,
 patient_no_assurance_maladie_during,sejour_since,sejour_during,sejour_id_unite_soin_during,
@@ -72,6 +69,7 @@ CREATE TABLE lit_SINCE (
   id_lit        INTEGER DEFAULT nextval('seq_id_lit'),
 	lit_since	DATE NOT NULL
 );
+
 
 CREATE TABLE lit_DURING (
   id_lit        INTEGER DEFAULT nextval('seq_id_lit'),
@@ -303,7 +301,7 @@ CREATE TABLE annuaire_numero_telephone_DURING (
 );
 
 --------------------qualification--------------------
-/* TODO : Check if we are not missing an attribute */
+
 CREATE SEQUENCE seq_id_qualification;
 CREATE TABLE qualification_SINCE (
   id_qualification  INTEGER DEFAULT nextval('seq_id_qualification'),
@@ -663,7 +661,7 @@ CREATE TABLE employe_specialite_DURING (
 CREATE TABLE medecin_traitant_SINCE (
   id_employe  INTEGER NOT NULL,
   id_patient  INTEGER NOT NULL,
-	medecin_traitant_since	DATE NOT NULL
+  medecin_traitant_since	DATE NOT NULL
 );
 
 CREATE TABLE medecin_traitant_DURING (
@@ -849,22 +847,33 @@ CREATE TABLE error_SINCE (
 );
 
 CREATE TABLE error_DURING (
-  code_error        INTEGER NOT NULL,
+  code_error        INTEGER DEFAULT nextval('seq_id_error'),
 	debut	DATE NOT NULL,
 	fin	DATE NOT NULL
 );
 
 CREATE TABLE error_libelle_error_DURING (
-  code_error        INTEGER NOT NULL,
+  code_error        INTEGER DEFAULT nextval('seq_id_error'),
   libelle_error     VARCHAR(150) NOT NULL,
 	debut	DATE NOT NULL,
 	fin	DATE NOT NULL
 );
 
+CREATE TABLE employe_nom_temp (
+  id_employe    INTEGER,
+  nom			VARCHAR(50),
+  unpck_date 	DATE
+);
+
+CREATE TABLE employe_prenom_temp (
+  id_employe    INTEGER,
+  prenom	    VARCHAR(50),
+  unpck_date   DATE
+);
+
 -------------------------------------------------------------------------------
 -- Ajout des contraintes aux tables
 -------------------------------------------------------------------------------
-
 
 
 --------------------lit--------------------
@@ -1565,5 +1574,7 @@ ALTER TABLE error_DURING ADD CONSTRAINT error_libelle_DURING_date_Chk CHECK (deb
 ALTER TABLE error_libelle_error_DURING ADD CONSTRAINT fk_error_libelle_error_code_error FOREIGN KEY(code_error)
 REFERENCES error_SINCE (code_error);
 
-/* Set schema back to default */
-SET search_path TO public;
+---------------employe_nom_temp et employe_prenom_temp-------------------
+
+ALTER TABLE employe_nom_temp ADD PRIMARY KEY (id_employe, unpck_date);
+ALTER TABLE employe_prenom_temp ADD PRIMARY KEY (id_employe, unpck_date);
