@@ -8,6 +8,50 @@
 ** Date: 06-12-2015
 ***************************************************************************** */
 
+-------------------------------------------------------------------------------
+-- Nettoyage complet des donnees
+-------------------------------------------------------------------------------
+SET search_path TO edt;
+TRUNCATE
+employe_nom_during,employe_prenom_during,
+patient_since,patient_during,patient_nom_during,patient_prenom_during,
+patient_nom_mere_during,patient_prenom_mere_during,patient_date_naissance_during,
+patient_no_assurance_maladie_during,sejour_since,sejour_during,sejour_id_unite_soin_during,
+chambre_since,
+unite_soin_since,employe_since,employe_during,sejour_id_chambre_during,
+sejour_id_lit_during,equipe_since,equipe_during,equipe_id_infirmiere_chef_during,
+annuaire_since,annuaire_during,annuaire_id_employe_during,
+annuaire_numero_telephone_during,qualification_since,qualification_during,
+qualification_qualification_during,specialite_since,specialite_during,
+specialite_specialite_during,medicament_since,medicament_during,format_since,
+format_during,format_format_during,voie_administration_since,
+voie_administration_during,voie_administration_voie_administration_during,
+prescription_since,prescription_during,prescription_validee_during,
+prescription_dose_during,prescription_id_voie_administration_during,
+prescription_conseils_during,ordonnance_since,ordonnance_during,
+ordonnance_id_employe_during,ordonnance_id_patient_during,
+ordonnance_date_emission_during,periode_since,
+periode_during,periode_heure_during,quart_travail_since,quart_travail_during,
+affectation_since,affectation_during,affectation_date_during,affectation_urgence_during,
+chambre_lit_since,chambre_lit_during,unite_soin_chambre_since,unite_soin_chambre_during,
+equipe_unite_soin_since,equipe_unite_soin_during,employe_equipe_since,
+employe_equipe_during,employe_qualification_since,employe_qualification_during,
+employe_specialite_since,employe_specialite_during,medecin_traitant_since,
+medecin_traitant_during,qualification_prealable_since,
+qualification_prealable_during,medicament_specialite_since,medicament_specialite_during,
+medicament_qualification_since,medicament_qualification_during,prescription_medicament_since,
+prescription_medicament_during,format_medicament_since,format_medicament_during,
+voie_administration_medicament_since,voie_administration_medicament_during,
+prescription_periode_since,prescription_periode_during,periode_quart_travail_since,
+periode_quart_travail_during,affectation_quart_travail_since,
+affectation_quart_travail_during,employe_quart_travail_since,employe_quart_travail_during,
+affectation_employe_since,affectation_employe_during,error_since,error_during,
+error_libelle_error_during,lit_since,lit_during,chambre_during,unite_soin_during
+CASCADE;
+
+/* Set schema back to default */
+SET search_path TO public;
+
 INSERT INTO edt.lit_SINCE (
   id_lit, lit_since
 ) (SELECT
