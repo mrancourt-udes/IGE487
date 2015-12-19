@@ -10,11 +10,14 @@
 ** Date: 17-12-2015
 ******************************************************************************/
 
+SET search_path TO edt;
+
 -------------------------------------------------------------------------------
 -- Nettoyage complet de la base de donnees
 -------------------------------------------------------------------------------
 DROP TABLE IF EXISTS
-employe_nom_temp,employe_prenom_temp,employe_nom_during,employe_prenom_during,
+patient_no_assurance_maladie_temp,employe_nom_temp,employe_prenom_temp,
+employe_nom_during,employe_prenom_during,
 patient_since,patient_during,patient_nom_during,patient_prenom_during,
 patient_nom_mere_during,patient_prenom_mere_during,patient_date_naissance_during,
 patient_no_assurance_maladie_during,sejour_since,sejour_during,sejour_id_unite_soin_during,
@@ -871,6 +874,12 @@ CREATE TABLE employe_prenom_temp (
   unpck_date   DATE
 );
 
+CREATE TABLE patient_no_assurance_maladie_temp (
+  id_patient    INTEGER,
+  no_assurance_maladie	    VARCHAR(50),
+  unpck_date   DATE
+);
+
 -------------------------------------------------------------------------------
 -- Ajout des contraintes aux tables
 -------------------------------------------------------------------------------
@@ -1578,3 +1587,6 @@ REFERENCES error_SINCE (code_error);
 
 ALTER TABLE employe_nom_temp ADD PRIMARY KEY (id_employe, unpck_date);
 ALTER TABLE employe_prenom_temp ADD PRIMARY KEY (id_employe, unpck_date);
+
+/* Set schema back to default */
+SET search_path TO public;
